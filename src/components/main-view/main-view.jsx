@@ -1,45 +1,39 @@
 import { useState } from "react";
+import { useEffect } from "react";
 import { MovieCard } from "../movie-card/movie-card";
-import { MovieView } from "./movie-view";
+import { MovieView } from "../movie-view/movie-view";
+
 export const MainView = () => {
-  const [movies, setMovies] = useState([
-    {
-      id: 1,
-      title: "The Hateful Eight",
-      image:
-        "https://m.media-amazon.com/images/I/51uT6dck-CL._SX300_SY300_QL70_FMwebp_.jpg",
-      director: "Quentin Tarantino",
-    },
-    {
-      id: 2,
-      title: "Pulp Fiction",
-      image:
-        "https://m.media-amazon.com/images/I/51LFlLl0ZOL._SX300_SY300_QL70_FMwebp_.jpg",
-      director: "Quentin Tarantino",
-    },
-    {
-      id: 3,
-      title: "Unbreakable",
-      image:
-        "https://m.media-amazon.com/images/I/41mP1lz0xKL._SX300_SY300_QL70_FMwebp_.jpg",
-      director: "M. Night Shyamalan",
-    },
-    {
-      id: 4,
-      title: "Snatch",
-      image: "https://i.ebayimg.com/images/g/M30AAOSwkJRghuOt/s-l500.jpg",
-      director: "Guy Ritchie",
-    },
-    {
-      id: 5,
-      title: "The Dark Knight",
-      image:
-        "https://m.media-amazon.com/images/I/51GBijGxSOL._SX300_SY300_QL70_FMwebp_.jpg",
-      director: "Christopher Nolan",
-    },
-  ]);
+  const [movies, setMovies] = useState([]);
 
   const [selectedMovie, setSelectedMovie] = useState(null);
+
+  useEffect(() => {
+    fetch("https://tame-gray-viper-cap.cyclic.app/movies")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data && Array.isArray(data)) {
+          // Ensure data is an array
+          const moviesFromApi = data.map((doc) => {
+            return {
+              id: doc._id,
+              title: doc.Title,
+              director: doc.Director.Name,
+              image: doc.ImagePath,
+              // ... other fields
+            };
+          });
+
+          setMovies(moviesFromApi);
+        } else {
+          console.error("Invalid data format received from API");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }),
+    [];
 
   if (selectedMovie) {
     return (
