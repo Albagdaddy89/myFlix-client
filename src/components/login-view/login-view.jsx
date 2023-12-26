@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 
 export const LoginView = ({ onLoggedIn }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [Username, setUsername] = useState("");
+  const [Password, setPassword] = useState("");
   const handleSubmit = (event) => {
     event.preventDefault();
 
     const data = {
-      Username: username,
-      Password: password,
+      Username: Username,
+      Password: Password,
     };
 
     fetch("https://tame-gray-viper-cap.cyclic.app/login", {
@@ -22,6 +22,8 @@ export const LoginView = ({ onLoggedIn }) => {
       .then((data) => {
         console.log("Login response: ", data);
         if (data.user) {
+          localStorage.setItem("user", JSON.stringify(data.user));
+          localStorage.setItem("token", data.token);
           onLoggedIn(data.user, data.token);
         } else {
           alert("No such user");
@@ -37,7 +39,7 @@ export const LoginView = ({ onLoggedIn }) => {
         Username:
         <input
           type="text"
-          value={username}
+          value={Username}
           onChange={(e) => setUsername(e.target.value)}
           required
         />
@@ -46,7 +48,7 @@ export const LoginView = ({ onLoggedIn }) => {
         Password:
         <input
           type="password"
-          value={password}
+          value={Password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
