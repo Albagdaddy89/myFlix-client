@@ -16,16 +16,6 @@ export const MainView = () => {
   const [token, setToken] = useState(null);
   // State for user
   const [user, setUser] = useState(null);
-  if (!user) {
-    return (
-      <LoginView
-        onLoggedIn={(user, token) => {
-          setUser(user);
-          setToken(token);
-        }}
-      />
-    );
-  }
 
   // useEffect hook to fetch movie data on component mount
   useEffect(() => {
@@ -47,7 +37,6 @@ export const MainView = () => {
             image: doc.ImagePath,
             // ... other fields
           }));
-
           setMovies(moviesFromApi); // Updating the state with the fetched movies
         } else {
           console.error("Invalid data format received from API");
@@ -56,9 +45,9 @@ export const MainView = () => {
       .catch((error) => {
         console.error("Error fetching data:", error); // Handling any errors in fetching data
       });
-  }, [token]); // Empty dependency array to run the effect only once after the component mounts
+  }, [token]); // Dependency array to re-run the effect if token changes
 
-  // Check if a user is logged in (assuming 'user' is part of your component's state or context)
+  // Rendering logic
   if (!user) {
     return (
       <>
@@ -74,31 +63,28 @@ export const MainView = () => {
     );
   }
 
-  // Check if a movie has been selected
   if (selectedMovie) {
     return (
       <MovieView
         movie={selectedMovie}
-        onBackClick={() => setSelectedMovie(null)} // Function to handle the back click
+        onBackClick={() => setSelectedMovie(null)}
       />
     );
   }
 
-  // Handling the case when no movies are available
   if (movies.length === 0) {
     return <div>The list is empty</div>;
   }
 
-  // Rendering the list of movies
   return (
     <div>
       {movies.map((movie) => (
         <MovieCard
           key={movie.id}
           movie={movie}
-          onMovieClick={(newSelectedMovie) => {
-            setSelectedMovie(newSelectedMovie); // Function to handle movie selection
-          }}
+          onMovieClick={(newSelectedMovie) =>
+            setSelectedMovie(newSelectedMovie)
+          }
         />
       ))}
       <button

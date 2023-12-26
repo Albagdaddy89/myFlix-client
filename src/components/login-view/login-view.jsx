@@ -3,20 +3,21 @@ import React, { useState } from "react";
 export const LoginView = ({ onLoggedIn }) => {
   const [Username, setUsername] = useState("");
   const [Password, setPassword] = useState("");
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const data = {
-      Username: Username,
-      Password: Password,
-    };
+    // Create a query string with username and password
+    const queryString = `?Username=${encodeURIComponent(
+      Username
+    )}&Password=${encodeURIComponent(Password)}`;
 
-    fetch("https://tame-gray-viper-cap.cyclic.app/login", {
+    fetch(`https://tame-gray-viper-cap.cyclic.app/login${queryString}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      // No need to send body for GET request
     })
       .then((response) => response.json())
       .then((data) => {
@@ -33,6 +34,7 @@ export const LoginView = ({ onLoggedIn }) => {
         alert("Something went wrong");
       });
   };
+
   return (
     <form onSubmit={handleSubmit}>
       <label>

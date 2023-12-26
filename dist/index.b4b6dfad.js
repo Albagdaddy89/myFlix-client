@@ -27188,16 +27188,6 @@ const MainView = ()=>{
     const [token, setToken] = (0, _react.useState)(null);
     // State for user
     const [user, setUser] = (0, _react.useState)(null);
-    if (!user) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _loginView.LoginView), {
-        onLoggedIn: (user, token)=>{
-            setUser(user);
-            setToken(token);
-        }
-    }, void 0, false, {
-        fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 21,
-        columnNumber: 7
-    }, undefined);
     // useEffect hook to fetch movie data on component mount
     (0, _react.useEffect)(()=>{
         if (!token) return;
@@ -27223,8 +27213,8 @@ const MainView = ()=>{
         });
     }, [
         token
-    ]); // Empty dependency array to run the effect only once after the component mounts
-    // Check if a user is logged in (assuming 'user' is part of your component's state or context)
+    ]); // Dependency array to re-run the effect if token changes
+    // Rendering logic
     if (!user) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
         children: [
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _loginView.LoginView), {
@@ -27234,45 +27224,40 @@ const MainView = ()=>{
                 }
             }, void 0, false, {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 65,
+                lineNumber: 54,
                 columnNumber: 9
             }, undefined),
             "or",
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _signupView.SignupView), {}, void 0, false, {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 72,
+                lineNumber: 61,
                 columnNumber: 9
             }, undefined)
         ]
     }, void 0, true);
-    // Check if a movie has been selected
     if (selectedMovie) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _movieView.MovieView), {
         movie: selectedMovie,
         onBackClick: ()=>setSelectedMovie(null)
     }, void 0, false, {
         fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 80,
+        lineNumber: 68,
         columnNumber: 7
     }, undefined);
-    // Handling the case when no movies are available
     if (movies.length === 0) return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
         children: "The list is empty"
     }, void 0, false, {
         fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 89,
+        lineNumber: 76,
         columnNumber: 12
     }, undefined);
-    // Rendering the list of movies
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
         children: [
             movies.map((movie)=>/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _movieCard.MovieCard), {
                     movie: movie,
-                    onMovieClick: (newSelectedMovie)=>{
-                        setSelectedMovie(newSelectedMovie); // Function to handle movie selection
-                    }
+                    onMovieClick: (newSelectedMovie)=>setSelectedMovie(newSelectedMovie)
                 }, movie.id, false, {
                     fileName: "src/components/main-view/main-view.jsx",
-                    lineNumber: 96,
+                    lineNumber: 82,
                     columnNumber: 9
                 }, undefined)),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -27283,13 +27268,13 @@ const MainView = ()=>{
                 children: "Logout"
             }, void 0, false, {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 104,
+                lineNumber: 90,
                 columnNumber: 7
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 94,
+        lineNumber: 80,
         columnNumber: 5
     }, undefined);
 };
@@ -28373,16 +28358,13 @@ const LoginView = ({ onLoggedIn })=>{
     const [Password, setPassword] = (0, _react.useState)("");
     const handleSubmit = (event)=>{
         event.preventDefault();
-        const data = {
-            Username: Username,
-            Password: Password
-        };
-        fetch("https://tame-gray-viper-cap.cyclic.app/login", {
+        // Create a query string with username and password
+        const queryString = `?Username=${encodeURIComponent(Username)}&Password=${encodeURIComponent(Password)}`;
+        fetch(`https://tame-gray-viper-cap.cyclic.app/login${queryString}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
+            }
         }).then((response)=>response.json()).then((data)=>{
             console.log("Login response: ", data);
             if (data.user) {
@@ -28407,13 +28389,13 @@ const LoginView = ({ onLoggedIn })=>{
                         required: true
                     }, void 0, false, {
                         fileName: "src/components/login-view/login-view.jsx",
-                        lineNumber: 40,
+                        lineNumber: 42,
                         columnNumber: 9
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/components/login-view/login-view.jsx",
-                lineNumber: 38,
+                lineNumber: 40,
                 columnNumber: 7
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
@@ -28426,13 +28408,13 @@ const LoginView = ({ onLoggedIn })=>{
                         required: true
                     }, void 0, false, {
                         fileName: "src/components/login-view/login-view.jsx",
-                        lineNumber: 49,
+                        lineNumber: 51,
                         columnNumber: 9
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/components/login-view/login-view.jsx",
-                lineNumber: 47,
+                lineNumber: 49,
                 columnNumber: 7
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -28440,13 +28422,13 @@ const LoginView = ({ onLoggedIn })=>{
                 children: "Submit"
             }, void 0, false, {
                 fileName: "src/components/login-view/login-view.jsx",
-                lineNumber: 56,
+                lineNumber: 58,
                 columnNumber: 7
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/components/login-view/login-view.jsx",
-        lineNumber: 37,
+        lineNumber: 39,
         columnNumber: 5
     }, undefined);
 };
@@ -28475,19 +28457,19 @@ var _react = require("react");
 var _s = $RefreshSig$();
 const SignupView = ()=>{
     _s();
-    const [username, setUsername] = (0, _react.useState)("");
-    const [password, setPassword] = (0, _react.useState)("");
-    const [email, setEmail] = (0, _react.useState)("");
-    const [birthday, setBirthday] = (0, _react.useState)("");
+    const [Username, setUsername] = (0, _react.useState)("");
+    const [Password, setPassword] = (0, _react.useState)("");
+    const [Email, setEmail] = (0, _react.useState)("");
+    const [Birthday, setBirthday] = (0, _react.useState)("");
     const handleSubmit = (event)=>{
         event.preventDefault();
         const data = {
-            Username: username,
-            Password: password,
-            Email: email,
-            Birthday: birthday
+            Username: Username,
+            Password: Password,
+            Email: Email,
+            Birthday: Birthday
         };
-        fetch("https://tame-gray-viper-cap.cyclic.app/login", {
+        fetch("https://tame-gray-viper-cap.cyclic.app/users", {
             method: "POST",
             body: JSON.stringify(data),
             headers: {
@@ -28508,7 +28490,7 @@ const SignupView = ()=>{
                     "Username:",
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
                         type: "text",
-                        value: username,
+                        value: Username,
                         onChange: (e)=>setUsername(e.target.value),
                         required: true,
                         minLength: "3"
@@ -28528,7 +28510,7 @@ const SignupView = ()=>{
                     "Password:",
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
                         type: "password",
-                        value: password,
+                        value: Password,
                         onChange: (e)=>setPassword(e.target.value),
                         required: true
                     }, void 0, false, {
@@ -28547,7 +28529,7 @@ const SignupView = ()=>{
                     "Email:",
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
                         type: "email",
-                        value: email,
+                        value: Email,
                         onChange: (e)=>setEmail(e.target.value),
                         required: true
                     }, void 0, false, {
@@ -28566,7 +28548,7 @@ const SignupView = ()=>{
                     "Birthday:",
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
                         type: "date",
-                        value: birthday,
+                        value: Birthday,
                         onChange: (e)=>setBirthday(e.target.value),
                         required: true
                     }, void 0, false, {
@@ -28595,7 +28577,7 @@ const SignupView = ()=>{
         columnNumber: 5
     }, undefined);
 };
-_s(SignupView, "jsOQN3GC2XlBG9ITlzCdpyJOnso=");
+_s(SignupView, "3Ly2uGwm2IaM8/h5bXhOpVGqO50=");
 _c = SignupView;
 var _c;
 $RefreshReg$(_c, "SignupView");
