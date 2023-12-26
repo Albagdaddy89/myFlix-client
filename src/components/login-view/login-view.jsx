@@ -1,6 +1,8 @@
-import react from "react";
+import React, { useState } from "react";
 
 export const LoginView = ({ onLoggedIn }) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const handleSubmit = (event) => {
     event.preventDefault();
 

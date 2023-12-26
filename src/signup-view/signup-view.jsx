@@ -16,7 +16,7 @@ export const SignupView = () => {
       Birthday: birthday,
     };
 
-    fetch("SIGNUP_URL", {
+    fetch("https://tame-gray-viper-cap.cyclic.app/login", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {

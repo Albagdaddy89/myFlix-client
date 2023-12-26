@@ -14,7 +14,8 @@ export const MainView = () => {
   const [selectedMovie, setSelectedMovie] = useState(null);
   // State for storing token
   const [token, setToken] = useState(null);
-
+  // State for user
+  const [user, setUser] = useState(null);
   if (!user) {
     return (
       <LoginView
