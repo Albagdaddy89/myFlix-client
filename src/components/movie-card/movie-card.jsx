@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { ProfileView } from "../profile-view/profile-view";
 
 export const MovieCard = ({ movie }) => {
   return (
