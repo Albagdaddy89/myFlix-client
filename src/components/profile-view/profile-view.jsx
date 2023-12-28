@@ -1,111 +1,99 @@
-import { useState } from "react";
-import { Col, Row, Container } from "react-bootstrap";
-import { Button, Card, Form } from "react-bootstrap";
-import { FavoriteMovies } from "./favorite-movie";
+import React, { useState, useEffect } from "react";
+import { MovieCard } from "../movie-card/movie-card";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
 
-export const ProfileView = ({ user, token, movies, setUser }) => {
+export const ProfileView = ({ user, movies, setUser }) => {
   const [username, setUsername] = useState(user.Username);
-  const [password, setPassword] = useState(user.Password);
+  const [password, setPassword] = useState("");
   const [email, setEmail] = useState(user.Email);
-  const [birthday, setBirthday] = useState(user.Birthday);
+  const [birthday, setBirthday] = useState(
+    user.Birthday ? user.Birthday.slice(0, 10) : ""
+  );
+  const [favoriteMovies, setFavoriteMovies] = useState([]);
 
-  const favoriteMovieList = movies.filter((movies) => {
-    return user.FavoriteMovies.includes(movies._id);
-  });
+  useEffect(() => {
+    fetch(
+      `https://tame-gray-viper-cap.cyclic.app/users/${user.Username}/FavoriteMovies`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setFavoriteMovies(data);
+      })
+      .catch((error) =>
+        console.error("Error fetching favorite movies:", error)
+      );
+  }, [user.Username]);
 
   const handleUpdate = (event) => {
     event.preventDefault();
-
-    const data = {
-      Username: username,
-      Password: password,
-      Email: email,
-      Birthday: birthday,
-    };
-
-    fetch("https://tame-gray-viper-cap.cyclic.app//users/${user.Username}", {
-      method: "PUT",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }).then(async (response) => {
-      if (response.ok) {
-        response.json();
-        alert("Update was successful");
-        window.location.reload();
-      } else {
-        alert("Update failed");
-      }
-    });
+    // Update logic here
   };
 
   return (
-    <Container className="my-5">
+    <Container>
+      {/* User information and update form */}
       <Row>
-        <Col md={5}>
-          <Card>
-            <Card.Body>
-              <Card.Title>My Profile</Card.Title>
-              <Card.Img
-                variant="top"
-                src="https://via.placeholder.com/250"
-                className="w-50 rounded"
-              />
-              <Card.Text>Username: {user.Username}</Card.Text>
-              <Card.Text>Email: {user.Email}</Card.Text>
-              <Card.Text>Birthday: {user.Birthday}</Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={7}>
-          <Form onSubmit={handleUpdate}>
+        {/* Profile Details */}
+        <Col md={6}>
+          <h2>My Profile</h2>
+          {/* User Update Form */}
+          <Form>
+            {/* Username Field */}
             <Form.Group controlId="formUsername">
               <Form.Label>Username:</Form.Label>
               <Form.Control
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                minLength="3"
-                placeholder={user.Username}
               />
             </Form.Group>
+            {/* Password Field */}
             <Form.Group controlId="formPassword">
               <Form.Label>Password:</Form.Label>
               <Form.Control
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="*****"
               />
             </Form.Group>
+            {/* Email Field */}
             <Form.Group controlId="formEmail">
               <Form.Label>Email:</Form.Label>
               <Form.Control
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder={user.Email}
               />
             </Form.Group>
+            {/* Birthday Field */}
             <Form.Group controlId="formBirthday">
               <Form.Label>Birthday:</Form.Label>
               <Form.Control
                 type="date"
                 value={birthday}
                 onChange={(e) => setBirthday(e.target.value)}
-                placeholder={user.Birthday}
               />
             </Form.Group>
-            <Button type="submit" onClick={handleUpdate} className="mt-2">
+            {/* Update Button */}
+            <Button variant="primary" type="submit" onClick={handleUpdate}>
               Update
             </Button>
           </Form>
         </Col>
       </Row>
-      <Row>
-        <FavoriteMovies favoriteMovieList={favoriteMovieList} />
+
+      {/* Favorite Movies */}
+      <Row className="mt-4">
+        <Col>
+          <h2>Favorite Movies</h2>
+          <Row>
+            {favoriteMovies.map((movie) => (
+              <Col xs={6} sm={4} md={3} lg={2} key={movie._id} className="mb-3">
+                <MovieCard movie={movie} />
+              </Col>
+            ))}
+          </Row>
+        </Col>
       </Row>
     </Container>
   );

@@ -2,7 +2,7 @@ import React from "react";
 import { useParams, Link } from "react-router-dom";
 import "./movie-view.scss";
 
-export const MovieView = ({ movies }) => {
+export const MovieView = ({ movies, onAddToFavorites }) => {
   const { movieId } = useParams();
 
   // Find the movie by ID from the movies array
@@ -10,11 +10,15 @@ export const MovieView = ({ movies }) => {
 
   // Check if movie is available
   if (!movie) {
-    return <div>Loading...</div>; // or any other placeholder content
+    return <div>Loading...</div>;
   }
 
+  const handleAddToFavoritesClick = () => {
+    onAddToFavorites(movie.id);
+  };
+
   return (
-    <div>
+    <div className="movie-view">
       <div>
         <img className="w-100" src={movie.image} alt={movie.title} />
       </div>
@@ -26,8 +30,10 @@ export const MovieView = ({ movies }) => {
         <span>Director: </span>
         <span>{movie.director}</span>
       </div>
-      {/* Link to navigate back to the main view */}
-      <Link to={`/`}>
+      <div>
+        <button onClick={handleAddToFavoritesClick}>Add to Favorites</button>
+      </div>
+      <Link to="/">
         <button className="back-button">Back</button>
       </Link>
     </div>
