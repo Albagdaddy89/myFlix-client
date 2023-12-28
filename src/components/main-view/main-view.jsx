@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
 import { SignupView } from "../signup-view/signup-view";
+import { ProfileView } from "../profile-view/profile-view";
+import { NavigationBar } from "../../components/navigation-bar/navigation-bar";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { NavigationBar } from "../../components/navigation-bar/navigation-bar";
-import { ProfileView } from "../profile-view/profile-view";
 
 export const MainView = () => {
   const [movies, setMovies] = useState([]);
@@ -41,6 +41,91 @@ export const MainView = () => {
     }
   }, [token]);
 
+  const handleAddToFavorites = (movieId) => {
+    if (user && user.FavoriteMovies.includes(movieId)) {
+      console.log("Movie is already in favorites.");
+      return;
+    }
+
+    fetch(
+      `https://tame-gray-viper-cap.cyclic.app/users/${user.Username}/movies/${movieId}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          console.log("Movie added to favorites.");
+          // Update user's favorites in state, if needed
+        } else {
+          console.error(
+            "Error adding movie to favorites:",
+            response.statusText
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error adding movie to favorites:", error);
+      });
+  };
+
+  const handleRemoveFromFavorites = (movieId) => {
+    if (!user || !user.FavoriteMovies.includes(movieId)) {
+      console.log("Movie is not in favorites.");
+      return;
+    }
+
+    fetch(
+      `https://tame-gray-viper-cap.cyclic.app/users/${user.Username}/movies/${movieId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          console.log("Movie removed from favorites.");
+          // Update user's favorites in state, if needed
+        } else {
+          console.error(
+            "Error removing movie from favorites:",
+            response.statusText
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error removing movie from favorites:", error);
+      });
+  };
+
+  const handleDeleteAccount = () => {
+    fetch(`https://tame-gray-viper-cap.cyclic.app/users/${user.Username}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          setUser(null); // Remove user from state
+          setToken(null); // Remove token from state
+          localStorage.clear(); // Clear local storage
+          // Redirect to login or home page as needed
+        } else {
+          // Handle non-successful responses
+        }
+      })
+      .catch((error) => {
+        // Handle errors
+      });
+  };
+
   return (
     <BrowserRouter>
       <NavigationBar
@@ -48,7 +133,7 @@ export const MainView = () => {
         onLoggedOut={() => {
           setUser(null);
           setToken(null);
-          localStorage.clear(); // Clears the local storage (for token and user info)
+          localStorage.clear();
         }}
       />
       <Row className="justify-content-md-center">
@@ -89,7 +174,11 @@ export const MainView = () => {
                 <Navigate to="/login" replace />
               ) : (
                 <Col md={8}>
-                  <MovieView movies={movies} />
+                  <MovieView
+                    movies={movies}
+                    onAddToFavorites={handleAddToFavorites}
+                    onRemoveFromFavorites={handleRemoveFromFavorites}
+                  />
                 </Col>
               )
             }
@@ -99,7 +188,12 @@ export const MainView = () => {
             element={
               user ? (
                 <Col md={8}>
-                  <ProfileView user={user} movies={movies} />
+                  <ProfileView
+                    user={user}
+                    movies={movies}
+                    token={token}
+                    onDeleteAccount={handleDeleteAccount}
+                  />
                 </Col>
               ) : (
                 <Navigate to="/login" />

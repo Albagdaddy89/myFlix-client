@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { MovieCard } from "../movie-card/movie-card";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 
-export const ProfileView = ({ user, setUser, token }) => {
+export const ProfileView = ({ user, setUser, token, onDeleteAccount }) => {
   const [username, setUsername] = useState(user.Username);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState(user.Email);
@@ -13,7 +13,8 @@ export const ProfileView = ({ user, setUser, token }) => {
 
   useEffect(() => {
     fetch(
-      `https://tame-gray-viper-cap.cyclic.app/users/${user.Username}/FavoriteMovies`
+      `https://tame-gray-viper-cap.cyclic.app/users/${user.Username}/FavoriteMovies`,
+      { headers: { Authorization: `Bearer ${token}` } }
     )
       .then((response) => response.json())
       .then((data) => {
@@ -28,35 +29,11 @@ export const ProfileView = ({ user, setUser, token }) => {
       .catch((error) =>
         console.error("Error fetching favorite movies:", error)
       );
-  }, [user.Username]);
+  }, [user.Username, token]);
 
   const handleUpdate = (event) => {
     event.preventDefault();
     // Implement update logic here
-  };
-
-  const handleDeleteAccount = () => {
-    fetch(`https://tame-gray-viper-cap.cyclic.app/users/${user.Username}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          setUser(null); // Remove user from state
-          localStorage.clear(); // Clear local storage
-          alert("Account deleted successfully");
-          // Redirect to login or home page as needed
-        } else {
-          alert("Failed to delete account");
-        }
-      })
-      .catch((error) => {
-        console.error("Error deleting account:", error);
-        alert("Error occurred while deleting account");
-      });
   };
 
   return (
@@ -67,7 +44,7 @@ export const ProfileView = ({ user, setUser, token }) => {
         <Col md={6}>
           <h2>My Profile</h2>
           {/* User Update Form */}
-          <Form>
+          <Form onSubmit={handleUpdate}>
             {/* Username Field */}
             <Form.Group controlId="formUsername">
               <Form.Label>Username:</Form.Label>
@@ -105,16 +82,12 @@ export const ProfileView = ({ user, setUser, token }) => {
               />
             </Form.Group>
             {/* Update Button */}
-            <Button variant="primary" type="submit" onClick={handleUpdate}>
+            <Button variant="primary" type="submit">
               Update
             </Button>
           </Form>
           {/* Delete Account Button */}
-          <Button
-            variant="danger"
-            className="mt-3"
-            onClick={handleDeleteAccount}
-          >
+          <Button variant="danger" className="mt-3" onClick={onDeleteAccount}>
             Delete Account
           </Button>
         </Col>
@@ -126,7 +99,7 @@ export const ProfileView = ({ user, setUser, token }) => {
           <h2>Favorite Movies</h2>
           <Row>
             {favoriteMovies.map((movie) => (
-              <Col xs={6} sm={4} md={3} lg={2} key={movie._id} className="mb-3">
+              <Col xs={6} sm={4} md={3} lg={2} key={movie.id} className="mb-3">
                 <MovieCard movie={movie} />
               </Col>
             ))}

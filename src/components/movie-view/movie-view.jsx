@@ -8,22 +8,11 @@ export const MovieView = ({
   onRemoveFromFavorites,
 }) => {
   const { movieId } = useParams();
-
-  // Find the movie by ID from the movies array
   const movie = movies.find((m) => m.id === movieId);
 
-  // Check if movie is available
   if (!movie) {
     return <div>Loading...</div>;
   }
-
-  const handleAddToFavoritesClick = () => {
-    onAddToFavorites(movie.id);
-  };
-
-  const handleRemoveFromFavoritesClick = () => {
-    onRemoveFromFavorites(movie.id);
-  };
 
   return (
     <div className="movie-view">
@@ -51,9 +40,11 @@ export const MovieView = ({
         <span>{movie.genre.Name}</span>
       </div>
       <div>
-        <button onClick={handleAddToFavoritesClick}>Add to Favorites</button>
+        <button onClick={() => onAddToFavorites(movieId)}>
+          Add to Favorites
+        </button>
         <button
-          onClick={handleRemoveFromFavoritesClick}
+          onClick={() => onRemoveFromFavorites(movieId)}
           className="remove-button"
         >
           Remove from Favorites
