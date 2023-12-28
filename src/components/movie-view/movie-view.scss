@@ -1,7 +1,27 @@
+/* CSS for buttons */
+.movie-button {
+  padding: 4px 12px;
+  margin-right: 10px;
+  color: white;
+  background-color: dodgerblue;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.remove-button {
+  background-color: red;
+}
+
 .back-button {
-  padding: 4px 12px 4px 12px;
+  padding: 4px 12px;
   color: whitesmoke;
   background-color: dodgerblue;
   border: none;
   border-radius: 4px;
+}
+
+/* CSS for movie card size */
+.movie-image {
+  max-width: 300px; /* Adjust the size as needed */
 }

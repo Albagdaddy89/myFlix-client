@@ -2,7 +2,11 @@ import React from "react";
 import { useParams, Link } from "react-router-dom";
 import "./movie-view.scss";
 
-export const MovieView = ({ movies, onAddToFavorites }) => {
+export const MovieView = ({
+  movies,
+  onAddToFavorites,
+  onRemoveFromFavorites,
+}) => {
   const { movieId } = useParams();
 
   // Find the movie by ID from the movies array
@@ -17,10 +21,18 @@ export const MovieView = ({ movies, onAddToFavorites }) => {
     onAddToFavorites(movie.id);
   };
 
+  const handleRemoveFromFavoritesClick = () => {
+    onRemoveFromFavorites(movie.id);
+  };
+
   return (
     <div className="movie-view">
       <div>
-        <img className="w-100" src={movie.image} alt={movie.title} />
+        <img
+          className="w-100 movie-image"
+          src={movie.image}
+          alt={movie.title}
+        />
       </div>
       <div>
         <span>Title: </span>
@@ -31,7 +43,21 @@ export const MovieView = ({ movies, onAddToFavorites }) => {
         <span>{movie.director}</span>
       </div>
       <div>
+        <span>Description: </span>
+        <span>{movie.description}</span>
+      </div>
+      <div>
+        <span>Genre: </span>
+        <span>{movie.genre.Name}</span>
+      </div>
+      <div>
         <button onClick={handleAddToFavoritesClick}>Add to Favorites</button>
+        <button
+          onClick={handleRemoveFromFavoritesClick}
+          className="remove-button"
+        >
+          Remove from Favorites
+        </button>
       </div>
       <Link to="/">
         <button className="back-button">Back</button>

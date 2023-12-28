@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { MovieCard } from "../movie-card/movie-card";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 
-export const ProfileView = ({ user, setUser }) => {
+export const ProfileView = ({ user, setUser, token }) => {
   const [username, setUsername] = useState(user.Username);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState(user.Email);
@@ -22,7 +22,6 @@ export const ProfileView = ({ user, setUser }) => {
           title: movie.Title,
           director: movie.Director.Name,
           image: movie.ImagePath,
-          // Add other properties as needed
         }));
         setFavoriteMovies(transformedMovies);
       })
@@ -33,7 +32,31 @@ export const ProfileView = ({ user, setUser }) => {
 
   const handleUpdate = (event) => {
     event.preventDefault();
-    // Update logic here
+    // Implement update logic here
+  };
+
+  const handleDeleteAccount = () => {
+    fetch(`https://tame-gray-viper-cap.cyclic.app/users/${user.Username}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          setUser(null); // Remove user from state
+          localStorage.clear(); // Clear local storage
+          alert("Account deleted successfully");
+          // Redirect to login or home page as needed
+        } else {
+          alert("Failed to delete account");
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting account:", error);
+        alert("Error occurred while deleting account");
+      });
   };
 
   return (
@@ -86,6 +109,14 @@ export const ProfileView = ({ user, setUser }) => {
               Update
             </Button>
           </Form>
+          {/* Delete Account Button */}
+          <Button
+            variant="danger"
+            className="mt-3"
+            onClick={handleDeleteAccount}
+          >
+            Delete Account
+          </Button>
         </Col>
       </Row>
 

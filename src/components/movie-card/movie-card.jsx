@@ -1,19 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Button, Card } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { ProfileView } from "../profile-view/profile-view";
+import "./movie-card.css"; // Import the custom CSS
 
 export const MovieCard = ({ movie }) => {
   return (
-    <Card className="h-100">
-      <Card.Img variant="top" src={movie.image} />
-      <Card.Body>
-        <Link to={`/movies/${encodeURIComponent(movie.id)}`}>
-          <Button variant="link">Open</Button>
-        </Link>
-      </Card.Body>
-    </Card>
+    <Link
+      to={`/movies/${encodeURIComponent(movie.id)}`}
+      className="movie-card-link"
+    >
+      <Card className="movie-card h-100">
+        <Card.Img variant="top" src={movie.image} />
+      </Card>
+    </Link>
   );
 };
 

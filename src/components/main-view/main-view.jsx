@@ -27,7 +27,8 @@ export const MainView = () => {
               title: doc.Title,
               director: doc.Director.Name,
               image: doc.ImagePath,
-              // ... other fields
+              genre: doc.Genre,
+              description: doc.Description,
             }));
             setMovies(moviesFromApi);
           } else {
