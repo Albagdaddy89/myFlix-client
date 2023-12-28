@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { MovieCard } from "../movie-card/movie-card";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 
-export const ProfileView = ({ user, movies, setUser }) => {
+export const ProfileView = ({ user, setUser }) => {
   const [username, setUsername] = useState(user.Username);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState(user.Email);
@@ -17,7 +17,14 @@ export const ProfileView = ({ user, movies, setUser }) => {
     )
       .then((response) => response.json())
       .then((data) => {
-        setFavoriteMovies(data);
+        const transformedMovies = data.map((movie) => ({
+          id: movie._id,
+          title: movie.Title,
+          director: movie.Director.Name,
+          image: movie.ImagePath,
+          // Add other properties as needed
+        }));
+        setFavoriteMovies(transformedMovies);
       })
       .catch((error) =>
         console.error("Error fetching favorite movies:", error)
