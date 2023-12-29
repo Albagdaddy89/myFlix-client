@@ -41,6 +41,11 @@ export const MainView = () => {
     }
   }, [token]);
 
+  const onLoggedIn = (loggedInUser, loggedInToken) => {
+    setUser(loggedInUser);
+    setToken(loggedInToken);
+  };
+
   const handleAddToFavorites = (movieId) => {
     if (user && user.FavoriteMovies.includes(movieId)) {
       console.log("Movie is already in favorites.");
@@ -145,7 +150,7 @@ export const MainView = () => {
                 <Navigate to="/" />
               ) : (
                 <Col md={6}>
-                  <SignupView />
+                  <SignupView onLoggedIn={onLoggedIn} />
                 </Col>
               )
             }
