@@ -31,9 +31,43 @@ export const ProfileView = ({ user, setUser, token, onDeleteAccount }) => {
       );
   }, [user.Username, token]);
 
+  // Inside your ProfileView component
+
   const handleUpdate = (event) => {
     event.preventDefault();
-    // Implement update logic here
+
+    // Create a user object with the updated details
+    const updatedUser = {
+      Username: username,
+      Password: password, // Make sure to hash the password on the server-side before saving
+      Email: email,
+      Birthday: birthday,
+    };
+
+    // Make a PUT request to the server endpoint
+    fetch(`https://tame-gray-viper-cap.cyclic.app/users/${user.Username}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Ensure the token is included for authentication
+      },
+      body: JSON.stringify(updatedUser),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to update user");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Update the user state with the new details if necessary
+        // setUser(data); // Uncomment this line if you need to update the user state
+        alert("Profile updated successfully.");
+      })
+      .catch((error) => {
+        console.error("Error updating profile:", error);
+        alert("Error updating profile.");
+      });
   };
 
   return (
