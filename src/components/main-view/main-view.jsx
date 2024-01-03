@@ -15,6 +15,7 @@ export const MainView = () => {
   const [user, setUser] = useState(storedUser ? storedUser : null);
   const [token, setToken] = useState(storedToken ? storedToken : null);
   const [movies, setMovies] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   //connect to API via HOOK
   useEffect(() => {
@@ -148,6 +149,14 @@ export const MainView = () => {
       });
   };
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredMovies = movies.filter((movie) =>
+    movie.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <BrowserRouter>
       <NavigationBar
@@ -158,7 +167,19 @@ export const MainView = () => {
           localStorage.clear();
         }}
       />
-      <Row className="justify-content-md-center">
+
+      <Row className="justify-content-md-center mt-4">
+        {/* Search Bar */}
+        <Col md={12} className="mb-4">
+          <Form.Control
+            type="text"
+            placeholder="Search for a movie..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+        </Col>
+
+        {/* Routes */}
         <Routes>
           <Route
             path="/signup"
@@ -179,12 +200,7 @@ export const MainView = () => {
                 <Navigate to="/" />
               ) : (
                 <Col md={6}>
-                  <LoginView
-                    onLoggedIn={(user, newToken) => {
-                      setUser(user);
-                      setToken(newToken);
-                    }}
-                  />
+                  <LoginView onLoggedIn={onLoggedIn} />
                 </Col>
               )
             }
@@ -196,11 +212,7 @@ export const MainView = () => {
                 <Navigate to="/login" replace />
               ) : (
                 <Col md={8}>
-                  <MovieView
-                    movies={movies}
-                    onAddToFavorites={handleAddToFavorites}
-                    onRemoveFromFavorites={handleRemoveFromFavorites}
-                  />
+                  <MovieView movies={movies} />
                 </Col>
               )
             }
@@ -222,24 +234,22 @@ export const MainView = () => {
               )
             }
           />
+
+          {/* Home Route */}
           <Route
             path="/"
             element={
-              !user ? (
-                <Navigate to="/login" replace />
-              ) : (
-                <Row>
-                  {movies.length === 0 ? (
-                    <Col>The list is empty!</Col>
-                  ) : (
-                    movies.map((movie) => (
-                      <Col md={4} key={movie.id} className="mb-4">
-                        <MovieCard movie={movie} />
-                      </Col>
-                    ))
-                  )}
-                </Row>
-              )
+              <Row>
+                {filteredMovies.length === 0 ? (
+                  <Col>No movies found!</Col>
+                ) : (
+                  filteredMovies.map((movie) => (
+                    <Col md={4} key={movie.id} className="mb-4">
+                      <MovieCard movie={movie} />
+                    </Col>
+                  ))
+                )}
+              </Row>
             }
           />
         </Routes>
