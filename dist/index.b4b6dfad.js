@@ -27001,9 +27001,12 @@ var _colDefault = parcelHelpers.interopDefault(_col);
 var _s = $RefreshSig$();
 const MainView = ()=>{
     _s();
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const storedToken = localStorage.getItem("token");
+    const [user, setUser] = (0, _react.useState)(storedUser ? storedUser : null);
+    const [token, setToken] = (0, _react.useState)(storedToken ? storedToken : null);
     const [movies, setMovies] = (0, _react.useState)([]);
-    const [user, setUser] = (0, _react.useState)(null);
-    const [token, setToken] = (0, _react.useState)(null);
+    //connect to API via HOOK
     (0, _react.useEffect)(()=>{
         if (token) fetch("https://tame-gray-viper-cap.cyclic.app/movies", {
             headers: {
@@ -27031,38 +27034,58 @@ const MainView = ()=>{
         setUser(loggedInUser);
         setToken(loggedInToken);
     };
-    const handleAddToFavorites = (movieId)=>{
-        if (user && user.FavoriteMovies.includes(movieId)) {
+    const handleAddToFavorites = (id)=>{
+        if (user && user.FavoriteMovies.includes(id)) {
             console.log("Movie is already in favorites.");
+            alert("Movie is already in favorites.");
             return;
         }
-        fetch(`https://tame-gray-viper-cap.cyclic.app/users/${user.Username}/movies/${movieId}`, {
+        fetch(`https://tame-gray-viper-cap.cyclic.app/users/${user.Username}/movies/${id}`, {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }).then((response)=>{
-            if (response.ok) console.log("Movie added to favorites.");
-            else console.error("Error adding movie to favorites:", response.statusText);
+            if (response.ok) {
+                console.log("Movie added to favorites.");
+                return response.json();
+            } else console.error("Error adding movie to favorites:", response.statusText);
+        }).then((updatedUser)=>{
+            if (updatedUser) {
+                localStorage.setItem("user", JSON.stringify(updatedUser));
+                setUser(updatedUser);
+                alert("Movie added to Favorites");
+            }
         }).catch((error)=>{
             console.error("Error adding movie to favorites:", error);
         });
     };
-    const handleRemoveFromFavorites = (movieId)=>{
-        if (!user || !user.FavoriteMovies.includes(movieId)) {
-            console.log("Movie is not in favorites.");
+    const handleRemoveFromFavorites = (id)=>{
+        console.log("Attempting to remove from favorites with token:", token);
+        if (!token) {
+            alert("No authorization token available.");
             return;
         }
-        fetch(`https://tame-gray-viper-cap.cyclic.app/users/${user.Username}/movies/${movieId}`, {
+        fetch(`https://tame-gray-viper-cap.cyclic.app/users/${user.Username}/movies/${id}`, {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }).then((response)=>{
-            if (response.ok) console.log("Movie removed from favorites.");
-            else console.error("Error removing movie from favorites:", response.statusText);
+            if (!response.ok) {
+                console.error("Response from server:", response);
+                alert("Failed to remove");
+                throw new Error("Failed to remove movie from favorites");
+            }
+            return response.json();
+        }).then((updatedUser)=>{
+            if (updatedUser) {
+                localStorage.setItem("user", JSON.stringify(updatedUser));
+                setUser(updatedUser);
+                alert("Movie removed from Favorites");
+            }
         }).catch((error)=>{
-            console.error("Error removing movie from favorites:", error);
+            console.error("Error: ", error);
         });
     };
     const handleDeleteAccount = ()=>{
@@ -27094,7 +27117,7 @@ const MainView = ()=>{
                 }
             }, void 0, false, {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 136,
+                lineNumber: 153,
                 columnNumber: 7
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _rowDefault.default), {
@@ -27113,7 +27136,7 @@ const MainView = ()=>{
                             }, void 0, false, void 0, void 0)
                         }, void 0, false, {
                             fileName: "src/components/main-view/main-view.jsx",
-                            lineNumber: 146,
+                            lineNumber: 163,
                             columnNumber: 11
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
@@ -27131,7 +27154,7 @@ const MainView = ()=>{
                             }, void 0, false, void 0, void 0)
                         }, void 0, false, {
                             fileName: "src/components/main-view/main-view.jsx",
-                            lineNumber: 158,
+                            lineNumber: 175,
                             columnNumber: 11
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
@@ -27149,7 +27172,7 @@ const MainView = ()=>{
                             }, void 0, false, void 0, void 0)
                         }, void 0, false, {
                             fileName: "src/components/main-view/main-view.jsx",
-                            lineNumber: 175,
+                            lineNumber: 192,
                             columnNumber: 11
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
@@ -27167,7 +27190,7 @@ const MainView = ()=>{
                             }, void 0, false, void 0, void 0)
                         }, void 0, false, {
                             fileName: "src/components/main-view/main-view.jsx",
-                            lineNumber: 191,
+                            lineNumber: 208,
                             columnNumber: 11
                         }, undefined),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
@@ -27188,28 +27211,28 @@ const MainView = ()=>{
                             }, void 0, false, void 0, void 0)
                         }, void 0, false, {
                             fileName: "src/components/main-view/main-view.jsx",
-                            lineNumber: 208,
+                            lineNumber: 225,
                             columnNumber: 11
                         }, undefined)
                     ]
                 }, void 0, true, {
                     fileName: "src/components/main-view/main-view.jsx",
-                    lineNumber: 145,
+                    lineNumber: 162,
                     columnNumber: 9
                 }, undefined)
             }, void 0, false, {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 144,
+                lineNumber: 161,
                 columnNumber: 7
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 135,
+        lineNumber: 152,
         columnNumber: 5
     }, undefined);
 };
-_s(MainView, "G+gU3cQbHvHlzXx+eNRbbuJNBF0=");
+_s(MainView, "vrQobkEX5jhNcI69dtstaSSmWyg=");
 _c = MainView;
 var _c;
 $RefreshReg$(_c, "MainView");
@@ -41897,6 +41920,7 @@ var _button = require("react-bootstrap/Button");
 var _buttonDefault = parcelHelpers.interopDefault(_button);
 var _form = require("react-bootstrap/Form");
 var _formDefault = parcelHelpers.interopDefault(_form);
+var _reactRouterDom = require("react-router-dom");
 var _s = $RefreshSig$();
 const SignupView = ({ onLoggedIn })=>{
     _s();
@@ -41904,6 +41928,7 @@ const SignupView = ({ onLoggedIn })=>{
     const [password, setPassword] = (0, _react.useState)("");
     const [email, setEmail] = (0, _react.useState)("");
     const [birthday, setBirthday] = (0, _react.useState)("");
+    const navigate = (0, _reactRouterDom.useNavigate)();
     const handleSubmit = (event)=>{
         event.preventDefault();
         const data = {
@@ -41912,6 +41937,7 @@ const SignupView = ({ onLoggedIn })=>{
             Email: email,
             Birthday: birthday
         };
+        console.log("Sending data:", data); // Log data being sent
         fetch("https://tame-gray-viper-cap.cyclic.app/users", {
             method: "POST",
             body: JSON.stringify(data),
@@ -41919,13 +41945,32 @@ const SignupView = ({ onLoggedIn })=>{
                 "Content-Type": "application/json"
             }
         }).then((response)=>{
-            if (!response.ok) response.json().then((data)=>{
-                throw new Error(data.message || "Signup failed");
-            });
+            if (!response.ok) {
+                console.error("Response Status:", response.status); // Log response status
+                return response.text().then((text)=>{
+                    throw new Error(text || "Signup failed");
+                });
+            }
             return response.json();
-        }).then((data)=>{
-            console.log("Signup and automatic login successful", data);
-            if (onLoggedIn) onLoggedIn(data.user, data.token); // Set the user and token in the app state
+        }).then(()=>{
+            // After successful signup, automatically log in the user
+            const queryString = `?Username=${encodeURIComponent(username)}&Password=${encodeURIComponent(password)}`;
+            return fetch(`https://tame-gray-viper-cap.cyclic.app/login${queryString}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+        }).then((response)=>{
+            if (!response.ok) throw new Error("Login failed after signup");
+            return response.json();
+        }).then((loginData)=>{
+            if (loginData.user) {
+                localStorage.setItem("user", JSON.stringify(loginData.user));
+                localStorage.setItem("token", loginData.token);
+                onLoggedIn(loginData.user, loginData.token);
+                navigate("/"); // Redirect to the home page
+            } else throw new Error("Failed to log in after signup");
         }).catch((error)=>{
             alert(error.message);
         });
@@ -41937,7 +41982,7 @@ const SignupView = ({ onLoggedIn })=>{
                 children: "Register:"
             }, void 0, false, {
                 fileName: "src/components/signup-view/signup-view.jsx",
-                lineNumber: 49,
+                lineNumber: 80,
                 columnNumber: 7
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _formDefault.default).Group, {
@@ -41947,7 +41992,7 @@ const SignupView = ({ onLoggedIn })=>{
                         children: "Username:"
                     }, void 0, false, {
                         fileName: "src/components/signup-view/signup-view.jsx",
-                        lineNumber: 51,
+                        lineNumber: 82,
                         columnNumber: 9
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _formDefault.default).Control, {
@@ -41958,13 +42003,13 @@ const SignupView = ({ onLoggedIn })=>{
                         minLength: "3"
                     }, void 0, false, {
                         fileName: "src/components/signup-view/signup-view.jsx",
-                        lineNumber: 52,
+                        lineNumber: 83,
                         columnNumber: 9
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/components/signup-view/signup-view.jsx",
-                lineNumber: 50,
+                lineNumber: 81,
                 columnNumber: 7
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _formDefault.default).Group, {
@@ -41974,7 +42019,7 @@ const SignupView = ({ onLoggedIn })=>{
                         children: "Password:"
                     }, void 0, false, {
                         fileName: "src/components/signup-view/signup-view.jsx",
-                        lineNumber: 62,
+                        lineNumber: 93,
                         columnNumber: 9
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _formDefault.default).Control, {
@@ -41984,23 +42029,23 @@ const SignupView = ({ onLoggedIn })=>{
                         required: true
                     }, void 0, false, {
                         fileName: "src/components/signup-view/signup-view.jsx",
-                        lineNumber: 63,
+                        lineNumber: 94,
                         columnNumber: 9
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/components/signup-view/signup-view.jsx",
-                lineNumber: 61,
+                lineNumber: 92,
                 columnNumber: 7
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _formDefault.default).Group, {
-                controlId: "exampleForm.ControlInput1",
+                controlId: "formEmail",
                 children: [
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _formDefault.default).Label, {
                         children: "Email:"
                     }, void 0, false, {
                         fileName: "src/components/signup-view/signup-view.jsx",
-                        lineNumber: 71,
+                        lineNumber: 102,
                         columnNumber: 9
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _formDefault.default).Control, {
@@ -42010,23 +42055,23 @@ const SignupView = ({ onLoggedIn })=>{
                         required: true
                     }, void 0, false, {
                         fileName: "src/components/signup-view/signup-view.jsx",
-                        lineNumber: 72,
+                        lineNumber: 103,
                         columnNumber: 9
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/components/signup-view/signup-view.jsx",
-                lineNumber: 70,
+                lineNumber: 101,
                 columnNumber: 7
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _formDefault.default).Group, {
-                controlId: "exampleForm.ControlInput1",
+                controlId: "formBirthday",
                 children: [
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _formDefault.default).Label, {
                         children: "Birthday:"
                     }, void 0, false, {
                         fileName: "src/components/signup-view/signup-view.jsx",
-                        lineNumber: 80,
+                        lineNumber: 111,
                         columnNumber: 9
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _formDefault.default).Control, {
@@ -42036,13 +42081,13 @@ const SignupView = ({ onLoggedIn })=>{
                         required: true
                     }, void 0, false, {
                         fileName: "src/components/signup-view/signup-view.jsx",
-                        lineNumber: 81,
+                        lineNumber: 112,
                         columnNumber: 9
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/components/signup-view/signup-view.jsx",
-                lineNumber: 79,
+                lineNumber: 110,
                 columnNumber: 7
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _buttonDefault.default), {
@@ -42051,17 +42096,21 @@ const SignupView = ({ onLoggedIn })=>{
                 children: "Submit"
             }, void 0, false, {
                 fileName: "src/components/signup-view/signup-view.jsx",
-                lineNumber: 88,
+                lineNumber: 119,
                 columnNumber: 7
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/components/signup-view/signup-view.jsx",
-        lineNumber: 48,
+        lineNumber: 79,
         columnNumber: 5
     }, undefined);
 };
-_s(SignupView, "jsOQN3GC2XlBG9ITlzCdpyJOnso=");
+_s(SignupView, "9EY7aHBTeX4vrgzfukBDdK8v2Cw=", false, function() {
+    return [
+        (0, _reactRouterDom.useNavigate)
+    ];
+});
 _c = SignupView;
 var _c;
 $RefreshReg$(_c, "SignupView");
@@ -42071,6 +42120,6 @@ $RefreshReg$(_c, "SignupView");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","react-bootstrap/Button":"aPzUt","react-bootstrap/Form":"iBZ80"}],"lJZlQ":[function() {},{}],"i5LP7":[function() {},{}]},["d8m58","1xC6H","d8Dch"], "d8Dch", "parcelRequire94c2")
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","react-bootstrap/Button":"aPzUt","react-bootstrap/Form":"iBZ80","react-router-dom":"9xmpe"}],"lJZlQ":[function() {},{}],"i5LP7":[function() {},{}]},["d8m58","1xC6H","d8Dch"], "d8Dch", "parcelRequire94c2")
 
 //# sourceMappingURL=index.b4b6dfad.js.map

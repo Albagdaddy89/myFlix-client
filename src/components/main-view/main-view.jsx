@@ -10,10 +10,13 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 export const MainView = () => {
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+  const storedToken = localStorage.getItem("token");
+  const [user, setUser] = useState(storedUser ? storedUser : null);
+  const [token, setToken] = useState(storedToken ? storedToken : null);
   const [movies, setMovies] = useState([]);
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
 
+  //connect to API via HOOK
   useEffect(() => {
     if (token) {
       fetch("https://tame-gray-viper-cap.cyclic.app/movies", {
@@ -46,14 +49,15 @@ export const MainView = () => {
     setToken(loggedInToken);
   };
 
-  const handleAddToFavorites = (movieId) => {
-    if (user && user.FavoriteMovies.includes(movieId)) {
+  const handleAddToFavorites = (id) => {
+    if (user && user.FavoriteMovies.includes(id)) {
       console.log("Movie is already in favorites.");
+      alert("Movie is already in favorites.");
       return;
     }
 
     fetch(
-      `https://tame-gray-viper-cap.cyclic.app/users/${user.Username}/movies/${movieId}`,
+      `https://tame-gray-viper-cap.cyclic.app/users/${user.Username}/movies/${id}`,
       {
         method: "POST",
         headers: {
@@ -64,7 +68,7 @@ export const MainView = () => {
       .then((response) => {
         if (response.ok) {
           console.log("Movie added to favorites.");
-          // Update user's favorites in state, if needed
+          return response.json();
         } else {
           console.error(
             "Error adding movie to favorites:",
@@ -72,19 +76,28 @@ export const MainView = () => {
           );
         }
       })
+      .then((updatedUser) => {
+        if (updatedUser) {
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+          setUser(updatedUser);
+          alert("Movie added to Favorites");
+        }
+      })
       .catch((error) => {
         console.error("Error adding movie to favorites:", error);
       });
   };
 
-  const handleRemoveFromFavorites = (movieId) => {
-    if (!user || !user.FavoriteMovies.includes(movieId)) {
-      console.log("Movie is not in favorites.");
+  const handleRemoveFromFavorites = (id) => {
+    console.log("Attempting to remove from favorites with token:", token);
+
+    if (!token) {
+      alert("No authorization token available.");
       return;
     }
 
     fetch(
-      `https://tame-gray-viper-cap.cyclic.app/users/${user.Username}/movies/${movieId}`,
+      `https://tame-gray-viper-cap.cyclic.app/users/${user.Username}/movies/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -93,18 +106,22 @@ export const MainView = () => {
       }
     )
       .then((response) => {
-        if (response.ok) {
-          console.log("Movie removed from favorites.");
-          // Update user's favorites in state, if needed
-        } else {
-          console.error(
-            "Error removing movie from favorites:",
-            response.statusText
-          );
+        if (!response.ok) {
+          console.error("Response from server:", response);
+          alert("Failed to remove");
+          throw new Error("Failed to remove movie from favorites");
+        }
+        return response.json();
+      })
+      .then((updatedUser) => {
+        if (updatedUser) {
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+          setUser(updatedUser);
+          alert("Movie removed from Favorites");
         }
       })
       .catch((error) => {
-        console.error("Error removing movie from favorites:", error);
+        console.error("Error: ", error);
       });
   };
 
