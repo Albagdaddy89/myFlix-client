@@ -8,6 +8,7 @@ import { ProfileView } from "../profile-view/profile-view";
 import { NavigationBar } from "../../components/navigation-bar/navigation-bar";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
 
 export const MainView = () => {
   const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -170,14 +171,16 @@ export const MainView = () => {
 
       <Row className="justify-content-md-center mt-4">
         {/* Search Bar */}
-        <Col md={12} className="mb-4">
-          <Form.Control
-            type="text"
-            placeholder="Search for a movie..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-        </Col>
+        {user && (
+          <Col md={12} className="mb-4">
+            <Form.Control
+              type="text"
+              placeholder="Search for a movie..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </Col>
+        )}
 
         {/* Routes */}
         <Routes>
