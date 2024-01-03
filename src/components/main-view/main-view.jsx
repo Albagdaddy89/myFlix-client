@@ -184,77 +184,63 @@ export const MainView = () => {
 
         {/* Routes */}
         <Routes>
-          <Route
-            path="/signup"
-            element={
-              user ? (
-                <Navigate to="/" />
-              ) : (
-                <Col md={6}>
-                  <SignupView onLoggedIn={onLoggedIn} />
-                </Col>
-              )
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              user ? (
-                <Navigate to="/" />
-              ) : (
-                <Col md={6}>
-                  <LoginView onLoggedIn={onLoggedIn} />
-                </Col>
-              )
-            }
-          />
-          <Route
-            path="/movies/:movieId"
-            element={
-              !user ? (
-                <Navigate to="/login" replace />
-              ) : (
-                <Col md={8}>
-                  <MovieView movies={movies} />
-                </Col>
-              )
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              user ? (
-                <Col md={8}>
-                  <ProfileView
-                    user={user}
-                    movies={movies}
-                    token={token}
-                    onDeleteAccount={handleDeleteAccount}
-                  />
-                </Col>
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          />
-
-          {/* Home Route */}
-          <Route
-            path="/"
-            element={
-              <Row>
-                {filteredMovies.length === 0 ? (
-                  <Col>No movies found!</Col>
-                ) : (
-                  filteredMovies.map((movie) => (
-                    <Col md={4} key={movie.id} className="mb-4">
-                      <MovieCard movie={movie} />
-                    </Col>
-                  ))
-                )}
-              </Row>
-            }
-          />
+          {!user ? (
+            <>
+              <Route
+                path="/signup"
+                element={<SignupView onLoggedIn={onLoggedIn} />}
+              />
+              <Route
+                path="/login"
+                element={<LoginView onLoggedIn={onLoggedIn} />}
+              />
+            </>
+          ) : (
+            <>
+              <Route
+                path="/movies/:movieId"
+                element={
+                  <Col md={8}>
+                    <MovieView
+                      movies={movies}
+                      onAddToFavorites={handleAddToFavorites}
+                      onRemoveFromFavorites={handleRemoveFromFavorites}
+                    />
+                  </Col>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <Col md={8}>
+                    <ProfileView
+                      user={user}
+                      movies={movies}
+                      token={token}
+                      onDeleteAccount={handleDeleteAccount}
+                    />
+                  </Col>
+                }
+              />
+              <Route
+                path="/"
+                element={
+                  <Row>
+                    {filteredMovies.length === 0 ? (
+                      <Col>No movies found!</Col>
+                    ) : (
+                      filteredMovies.map((movie) => (
+                        <Col md={4} key={movie.id} className="mb-4">
+                          <MovieCard movie={movie} />
+                        </Col>
+                      ))
+                    )}
+                  </Row>
+                }
+              />
+            </>
+          )}
+          <Route path="*" element={<Navigate to={user ? "/" : "/login"} />} />
         </Routes>
       </Row>
     </BrowserRouter>
