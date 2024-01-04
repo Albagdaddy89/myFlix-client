@@ -1,5 +1,40 @@
-$color: steelblue;
+$primary-color: steelblue;
+$dark-background: #121212; // Dark background color
+$accent-color: red; // Red accent color
+$button-hover-color: darken(
+  $accent-color,
+  10%
+); // Darker shade for hover effect
+
+body {
+  background-color: $dark-background;
+  color: white;
+}
 
 .my-flix {
-  color: $color;
+  color: $primary-color;
 }
+
+// Button styles
+.button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &.add-button {
+    background-color: green;
+  }
+
+  &.remove-button {
+    background-color: $accent-color;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+    background-color: $button-hover-color;
+  }
+}
+
+// Additional styling can be added here

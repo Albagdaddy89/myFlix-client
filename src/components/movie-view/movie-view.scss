@@ -1,27 +1,51 @@
-/* CSS for buttons */
-.movie-button {
+/* Styling for the 'Add to Favorites' button */
+.add-button {
   padding: 4px 12px;
   margin-right: 10px;
-  color: white;
-  background-color: dodgerblue;
+  color: rgb(5, 5, 5);
+  background-color: #28a745; /* Green color */
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
+.add-button:hover {
+  background-color: #218838; /* Slightly darker green on hover */
+  transform: scale(1.1); /* Slightly larger on hover */
+}
+
+/* Styling for the 'Remove from Favorites' button */
 .remove-button {
-  background-color: red;
+  background-color: #dc3545; /* Red color */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.remove-button:hover {
+  background-color: #c82333; /* Slightly darker red on hover */
+  transform: scale(1.1); /* Slightly larger on hover */
+}
+
+/* CSS for movie card image size */
+.movie-image {
+  max-width: 500px; /* Adjust the size as needed */
 }
 
 .back-button {
   padding: 4px 12px;
-  color: whitesmoke;
-  background-color: dodgerblue;
+  margin-right: 10px;
+  color: rgb(228, 222, 222);
+  background-color: #444845; /* Green color */
   border: none;
   border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-/* CSS for movie card size */
-.movie-image {
-  max-width: 300px; /* Adjust the size as needed */
+.back-button:hover {
+  background-color: #1c1d1c; /* Slightly darker green on hover */
+  transform: scale(1.1); /* Slightly larger on hover */
 }

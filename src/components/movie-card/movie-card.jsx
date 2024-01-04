@@ -11,7 +11,8 @@ export const MovieCard = ({ movie }) => {
       className="movie-card-link"
     >
       <Card className="movie-card h-100">
-        <Card.Img variant="top" src={movie.image} />
+        <Card.Img variant="top" src={movie.image} alt="{movie.title}" />
+        <div className="movie-title">{movie.title}</div>
       </Card>
     </Link>
   );

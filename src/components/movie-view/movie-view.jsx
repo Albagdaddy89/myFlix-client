@@ -40,7 +40,10 @@ export const MovieView = ({
         <span>{movie.genre.Name}</span>
       </div>
       <div>
-        <button onClick={() => onAddToFavorites(movieId)}>
+        <button
+          className="add-button"
+          onClick={() => onAddToFavorites(movieId)}
+        >
           Add to Favorites
         </button>
         <button
