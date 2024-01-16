@@ -27065,10 +27065,17 @@ const MainView = ()=>{
     };
     const handleRemoveFromFavorites = (id)=>{
         console.log("Attempting to remove from favorites with token:", token);
+        // Check if there is no authorization token
         if (!token) {
             alert("No authorization token available.");
             return;
         }
+        // Check if the movie is in the user's favorites
+        if (!user.FavoriteMovies.includes(id)) {
+            alert("Movie not in favorites.");
+            return;
+        }
+        // Proceed to remove the movie from favorites
         fetch(`https://tame-gray-viper-cap.cyclic.app/users/${user.Username}/movies/${id}`, {
             method: "DELETE",
             headers: {
@@ -27124,7 +27131,7 @@ const MainView = ()=>{
                 }
             }, void 0, false, {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 163,
+                lineNumber: 171,
                 columnNumber: 7
             }, undefined),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _rowDefault.default), {
@@ -27140,12 +27147,12 @@ const MainView = ()=>{
                             onChange: (e)=>setSearchTerm(e.target.value)
                         }, void 0, false, {
                             fileName: "src/components/main-view/main-view.jsx",
-                            lineNumber: 176,
+                            lineNumber: 184,
                             columnNumber: 13
                         }, undefined)
                     }, void 0, false, {
                         fileName: "src/components/main-view/main-view.jsx",
-                        lineNumber: 175,
+                        lineNumber: 183,
                         columnNumber: 11
                     }, undefined),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Routes), {
@@ -27159,7 +27166,7 @@ const MainView = ()=>{
                                         }, void 0, false, void 0, void 0)
                                     }, void 0, false, {
                                         fileName: "src/components/main-view/main-view.jsx",
-                                        lineNumber: 189,
+                                        lineNumber: 197,
                                         columnNumber: 15
                                     }, undefined),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
@@ -27169,7 +27176,7 @@ const MainView = ()=>{
                                         }, void 0, false, void 0, void 0)
                                     }, void 0, false, {
                                         fileName: "src/components/main-view/main-view.jsx",
-                                        lineNumber: 193,
+                                        lineNumber: 201,
                                         columnNumber: 15
                                     }, undefined)
                                 ]
@@ -27187,7 +27194,7 @@ const MainView = ()=>{
                                         }, void 0, false, void 0, void 0)
                                     }, void 0, false, {
                                         fileName: "src/components/main-view/main-view.jsx",
-                                        lineNumber: 200,
+                                        lineNumber: 208,
                                         columnNumber: 15
                                     }, undefined),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
@@ -27203,7 +27210,7 @@ const MainView = ()=>{
                                         }, void 0, false, void 0, void 0)
                                     }, void 0, false, {
                                         fileName: "src/components/main-view/main-view.jsx",
-                                        lineNumber: 212,
+                                        lineNumber: 220,
                                         columnNumber: 15
                                     }, undefined),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.Route), {
@@ -27221,7 +27228,7 @@ const MainView = ()=>{
                                         }, void 0, false, void 0, void 0)
                                     }, void 0, false, {
                                         fileName: "src/components/main-view/main-view.jsx",
-                                        lineNumber: 225,
+                                        lineNumber: 233,
                                         columnNumber: 15
                                     }, undefined)
                                 ]
@@ -27233,25 +27240,25 @@ const MainView = ()=>{
                                 }, void 0, false, void 0, void 0)
                             }, void 0, false, {
                                 fileName: "src/components/main-view/main-view.jsx",
-                                lineNumber: 243,
+                                lineNumber: 251,
                                 columnNumber: 11
                             }, undefined)
                         ]
                     }, void 0, true, {
                         fileName: "src/components/main-view/main-view.jsx",
-                        lineNumber: 186,
+                        lineNumber: 194,
                         columnNumber: 9
                     }, undefined)
                 ]
             }, void 0, true, {
                 fileName: "src/components/main-view/main-view.jsx",
-                lineNumber: 172,
+                lineNumber: 180,
                 columnNumber: 7
             }, undefined)
         ]
     }, void 0, true, {
         fileName: "src/components/main-view/main-view.jsx",
-        lineNumber: 162,
+        lineNumber: 170,
         columnNumber: 5
     }, undefined);
 };

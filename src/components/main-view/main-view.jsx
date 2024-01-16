@@ -93,11 +93,19 @@ export const MainView = () => {
   const handleRemoveFromFavorites = (id) => {
     console.log("Attempting to remove from favorites with token:", token);
 
+    // Check if there is no authorization token
     if (!token) {
       alert("No authorization token available.");
       return;
     }
 
+    // Check if the movie is in the user's favorites
+    if (!user.FavoriteMovies.includes(id)) {
+      alert("Movie not in favorites.");
+      return;
+    }
+
+    // Proceed to remove the movie from favorites
     fetch(
       `https://tame-gray-viper-cap.cyclic.app/users/${user.Username}/movies/${id}`,
       {
